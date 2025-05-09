@@ -4,6 +4,8 @@ import {
   collection,
   doc,
   getDocs,
+  limit,
+  orderBy,
   query,
   updateDoc,
   where,
@@ -11,8 +13,10 @@ import {
 
 export const updateSearchCount = async (queryStr: string, movie: Movie) => {
   try {
-
-    const q = query(collection(db, "searches"), where("searchTerm", "==", queryStr));
+    const q = query(
+      collection(db, "searches"),
+      where("searchTerm", "==", queryStr)
+    );
     const snapshot = await getDocs(q);
 
     if (!snapshot.empty) {
@@ -31,5 +35,34 @@ export const updateSearchCount = async (queryStr: string, movie: Movie) => {
     }
   } catch (error) {
     console.error("🔥 Firebase error:", error);
+  }
+};
+
+export const getTrendingMovies = async (): Promise<
+  TrendingMovie[] | undefined
+> => {
+  try {
+    const q = query(
+      collection(db, "searches"),
+      orderBy('count', 'desc'),
+      limit(5)
+    );
+    // const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
+    //   Query.limit(5),
+    //   Query.orderDesc("count"),
+    // ]);
+    const snapshot = await getDocs(q);
+
+    const movies = snapshot.docs.map((doc) => ({
+      ...doc.data()!,
+      id: doc.id!,
+    })) as unknown as TrendingMovie[];
+
+    return movies;
+
+
+  } catch (error) {
+     console.error("🔥 Error fetching trending movies:", error);
+    return undefined;
   }
 };

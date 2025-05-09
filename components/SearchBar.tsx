@@ -5,8 +5,8 @@ import { Image, TextInput, View } from "react-native";
 interface Props {
   placeholder: string;
   onPress?: () => void;
-  value: string;
-  onChangeText: (text: string) => void;
+  value?: string;
+  onChangeText?: (text: string) => void; // Probably gonna have to change the "?" to keep the same search bar from the index to search bar for fluid search
 }
 
 const SearchBar = ({ placeholder, onPress, value, onChangeText }: Props) => {
