@@ -10,7 +10,7 @@ const MovieCard = ({
   vote_average,
   release_date,
 }: Movie) => {
-//   console.log(poster_path);
+  const fixed_vote_average = Number(vote_average.toFixed(1));
 
   return (
     <Link href={`/movies/${id}`} asChild>
@@ -25,11 +25,13 @@ const MovieCard = ({
           resizeMode="cover"
         />
 
-        <Text numberOfLines={1} className="text-sm font-bold text-white">{title}</Text>
+        <Text numberOfLines={1} className="text-sm font-bold text-white">
+          {title}
+        </Text>
         <View className="flex-row items-center justify-start gap-x-1">
           <Image source={icons.star} className="size-4" />
           <Text className="text-xs text-white font-bold uppercase">
-            {Math.round(vote_average / 2)}
+            {fixed_vote_average}
           </Text>
         </View>
         <View className="flex-row items-center justify-between">

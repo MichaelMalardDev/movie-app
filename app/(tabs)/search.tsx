@@ -7,9 +7,11 @@ import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
 
 import SearchBar from "@/components/SearchBar";
 import { icons } from "@/constants/icons";
+import { updateSearchCount } from "@/services/firebase";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortedMovies, setSortedMovies] = useState<Movie[]>([]);
 
   const {
     data: movies,
@@ -19,10 +21,31 @@ const Search = () => {
     reset,
   } = useFetch(() => fetchMovies({ query: searchQuery }), false);
 
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(async () => {
+
+  //     if (searchQuery.trim()) {
+  //       await loadMovies();
+
+  //       // if (movies.length > 0 && movies?.[0])
+  //       if (movies?.length! > 0 && movies?.[0] && !moviesLoading) {
+  //         console.log('test');
+  //         await updateSearchCount(searchQuery, movies[0]);
+  //       }
+
+  //     } else {
+  //       reset();
+  //     }
+  //   }, 500);
+
+  //   return () => clearTimeout(timeoutId);
+  // }, [searchQuery]);
+
+  // Appel seulement le fetch des films quand le texte change
   useEffect(() => {
-    const timeoutId = setTimeout(async () => {
+    const timeoutId = setTimeout(() => {
       if (searchQuery.trim()) {
-        await loadMovies();
+        loadMovies();
       } else {
         reset();
       }
@@ -30,6 +53,16 @@ const Search = () => {
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
+
+  // Appel le updateSearchCount quand les movies sont disponibles
+  useEffect(() => {
+    if (searchQuery.trim() && movies?.length > 0) {
+      const sorted = [...movies].sort((a, b) => b.popularity - a.popularity);
+      setSortedMovies(sorted);
+
+      updateSearchCount(searchQuery, sorted[0]); // utilise le plus populaire
+    }
+  }, [movies]);
 
   return (
     <View className="flex-1 bg-primary">
@@ -40,7 +73,7 @@ const Search = () => {
       />
 
       <FlatList
-        data={movies}
+        data={sortedMovies}
         renderItem={({ item }) => <MovieCard {...item} />}
         keyExtractor={(item) => item.id.toString()}
         className="px-5"
@@ -94,7 +127,7 @@ const Search = () => {
           !moviesLoading && !moviesError ? (
             <View className="mt-10 px-4">
               <Text className="text-center text-gray-500">
-                {searchQuery.trim() ? 'No movies found' : 'Search for a movie'} 
+                {searchQuery.trim() ? "No movies found" : "Search for a movie"}
               </Text>
             </View>
           ) : null
