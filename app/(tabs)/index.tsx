@@ -14,22 +14,32 @@ import {
   ScrollView,
   Text,
   View,
+  RefreshControl,
 } from "react-native";
+import { useState } from "react";
 
 export default function Index() {
   const router = useRouter();
-
+  const [refreshing, setRefreshing] = useState(false);
   const {
     data: trendingMovies,
     loading: trendingLoading,
     error: trendingError,
+    refetch: refetchTrending,
   } = useFetch(getTrendingMovies);
 
   const {
     data: movies,
     loading: moviesLoading,
     error: moviesError,
+    refetch: refetchMovies,
   } = useFetch(() => fetchMovies({ query: "" }));
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([refetchTrending(), refetchMovies()]);
+    setRefreshing(false);
+  };
 
   return (
     <View className="flex-1 bg-primary">
@@ -38,6 +48,14 @@ export default function Index() {
         className="flex-1 px-5"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#151312"
+            colors={["#151312"]}
+          />
+        }
       >
         <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto" />
 
@@ -67,7 +85,9 @@ export default function Index() {
                   ItemSeparatorComponent={() => <View className="w-10" />}
                   className="mb-4 mt-3"
                   data={trendingMovies}
-                  renderItem={({ item, index }) => <TrendingCard movie={item} index={index} />}
+                  renderItem={({ item, index }) => (
+                    <TrendingCard movie={item} index={index} />
+                  )}
                   keyExtractor={(item) => item.movie_id.toString()}
                 />
               </View>
