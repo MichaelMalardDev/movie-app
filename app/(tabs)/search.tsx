@@ -21,25 +21,6 @@ const Search = () => {
     reset,
   } = useFetch(() => fetchMovies({ query: searchQuery }), false);
 
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(async () => {
-
-  //     if (searchQuery.trim()) {
-  //       await loadMovies();
-
-  //       // if (movies.length > 0 && movies?.[0])
-  //       if (movies?.length! > 0 && movies?.[0] && !moviesLoading) {
-  //         console.log('test');
-  //         await updateSearchCount(searchQuery, movies[0]);
-  //       }
-
-  //     } else {
-  //       reset();
-  //     }
-  //   }, 500);
-
-  //   return () => clearTimeout(timeoutId);
-  // }, [searchQuery]);
 
   // Appel seulement le fetch des films quand le texte change
   useEffect(() => {
