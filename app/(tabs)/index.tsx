@@ -1,5 +1,4 @@
 import MovieCard from "@/components/MovieCard";
-import SearchBar from "@/components/SearchBar";
 import TrendingCard from "@/components/TrendingCard";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
@@ -15,6 +14,7 @@ import {
   Text,
   View,
   RefreshControl,
+  Button,
 } from "react-native";
 import { useState } from "react";
 
@@ -58,21 +58,22 @@ export default function Index() {
         }
       >
         <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto" />
+        {/* <Button title="Se connecter" onPress={() => router.push("/login")} /> */}
 
         {moviesLoading || trendingLoading ? (
           <ActivityIndicator
-            size={"large"}
-            color={"#0000ff"}
-            className="mt-10 self-center"
+            size="large"
+            color="#AB8BFF"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           />
         ) : moviesError || trendingError ? (
           <Text>Error: {moviesError?.message || trendingError?.message}</Text>
         ) : (
           <View className="flex-1 mt-5">
-            <SearchBar
+            {/* <SearchBar
               onPress={() => router.push("/search")}
               placeholder="Search for a movie"
-            />
+            /> */}
 
             {trendingMovies && (
               <View className="mt-10">

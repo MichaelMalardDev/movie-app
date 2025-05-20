@@ -21,7 +21,7 @@ const SearchBar = ({ placeholder, onPress, value, onChangeText }: Props) => {
 
       <TextInput
         onPress={onPress}
-        // autoFocus={true}
+        autoFocus
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}

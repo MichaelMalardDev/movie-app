@@ -45,6 +45,8 @@ const _Layout = () => {
             borderWidth: 1,
             borderColor: "#0f0d23",
           },
+          sceneStyle: { backgroundColor: '#030014' },
+          animation: "shift",
         }}
       >
         <Tabs.Screen

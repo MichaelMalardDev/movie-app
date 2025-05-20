@@ -1,9 +1,8 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-// Import Firestore Database
+// firebaseConfig.ts
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
   authDomain: "movie-app-9bde6.firebaseapp.com",
@@ -13,6 +12,9 @@ const firebaseConfig = {
   appId: "1:161393473839:web:9ca54aecbdd0057f3349da",
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// ⚠️ Protection contre double initialisation
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+
+
+export const auth = getAuth(app);
 export const db = getFirestore(app);
